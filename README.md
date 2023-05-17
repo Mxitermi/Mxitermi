@@ -1,7 +1,7 @@
-- 👋 Hi :)
+- :)
 
 
-All my Code is very clean!
+better
 
 <!---
 Mxitermi/Mxitermi is a ✨ special ✨ repository because its `README.md` (this file) appears on your GitHub profile.
