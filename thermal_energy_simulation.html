@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Thermal Energy Simulation</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <h1>Thermal Energy Simulation</h1>
+    <div>
+        <button id="sehrkalt">sehr kalt</button>
+        <button id="kalt">kalt</button>
+        <button id="warm">warm</button>
+        <button id="heiss">heiß</button>
+    </div>
+    <div>
+        <label for="amountRange">Amount of Atoms:</label>
+        <input type="range" id="amountRange" min="10" max="100" value="50">
+    </div>
+    <canvas id="simulationCanvas" width="800" height="400"></canvas>
+
+    <script>
+        var canvas = document.getElementById("simulationCanvas");
+        var ctx = canvas.getContext("2d");
+
+        var amountSlider = document.getElementById("amountRange");
+        var amount = amountSlider.value;
+
+        var speed = 5;
+
+        var atoms = [];
+
+        function Atom(x, y, speedX, speedY) {
+            this.x = x;
+            this.y = y;
+            this.speedX = speedX;
+            this.speedY = speedY;
+
+            this.draw = function () {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 5, 0, Math.PI * 2);
+                ctx.fillStyle = "red";
+                ctx.fill();
+                ctx.closePath();
+            };
+
+            this.update = function () {
+                if (this.x + this.speedX > canvas.width - 5 || this.x + this.speedX < 5) {
+                    this.speedX = -this.speedX;
+                }
+                if (this.y + this.speedY > canvas.height - 5 || this.y + this.speedY < 5) {
+                    this.speedY = -this.speedY;
+                }
+
+                this.x += this.speedX;
+                this.y += this.speedY;
+            };
+        }
+
+        function createAtoms() {
+            atoms = [];
+            for (var i = 0; i < amount; i++) {
+                var x = Math.random() * (canvas.width - 10) + 5;
+                var y = Math.random() * (canvas.height - 10) + 5;
+                var speedX = (Math.random() - 0.5) * speed;
+                var speedY = (Math.random() - 0.5) * speed;
+                atoms.push(new Atom(x, y, speedX, speedY));
+            }
+        }
+
+        function updateSimulation() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (var i = 0; i < atoms.length; i++) {
+                atoms[i].draw();
+                atoms[i].update();
+            }
+            requestAnimationFrame(updateSimulation);
+        }
+
+        function updateSpeed(newSpeed) {
+            speed = newSpeed * 10;
+            createAtoms();
+        }
+
+        document.getElementById("sehrkalt").addEventListener("click", function () {
+            updateSpeed(0.1);
+        });
+
+        document.getElementById("kalt").addEventListener("click", function () {
+            updateSpeed(0.3);
+        });
+
+        document.getElementById("warm").addEventListener("click", function () {
+            updateSpeed(0.5);
+        });
+
+        document.getElementById("heiss").addEventListener("click", function () {
+            updateSpeed(0.8);
+        });
+
+        amountSlider.oninput = function () {
+           
+        amount = this.value;
+        createAtoms();
+            };
+
+    createAtoms();
+    updateSimulation();
+</script>
+</body>
+</html>
